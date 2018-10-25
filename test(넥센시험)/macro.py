@@ -1,6 +1,7 @@
 # -*- encoding:utf8 -*-
 
 from selenium import webdriver
+from selenium.webdriver.support.ui import Select
 from bs4 import BeautifulSoup
 from urllib.request import urlretrieve
 from PIL import Image
@@ -418,18 +419,17 @@ if __name__ == '__main__':
         except:
             # Captcha가 없을 경우
             elem = ''
-            driver.refresh()
     # 다양한 경우에 대한 빈 좌석 칮가
         #좌석 지정
 
         if cbCheck[0]==1:
-            tmp = "1루 블루석(홈팀)"
+            tmp = "1루 블루석"
         elif cbCheck[1]==1:
             tmp = "외야비지정석"
         elif cbCheck[2]==1:
-            tmp = "3루 블루석(원정팀)"
+            tmp = "3루 블루석"
         elif cbCheck[3]==1:
-            tmp = "1루 외야지정석(홈팀)"
+            tmp = "1루 외야지정석"
         elif cbCheck[4]==1:
             tmp = "3루 레드석"
         elif cbCheck[5]==1:
@@ -441,11 +441,16 @@ if __name__ == '__main__':
         blue.click()
         driver.execute_script("javascript:KBOGate.SetSeatAuto();")
         # 2단계 프레임 받아오기
+        
+        select = Select(driver.find_elements_by_css_selector("#PriceRow000 > td.taL > select"))
+        driver.execute_script("javascript:alert('선택완료');")
+        select.select_by_index(1)
+        driver.execute_script("javascript:fnNextStep('P');")
 
         driver.switch_to.default_content()
         frame = driver.page_source
         base = BeautifulSoup(frame,'html.parser')
-        for n in base:
+        for n in base:  
             print(n.text.strip())
         driver.switch_to.frame(frame)
 
